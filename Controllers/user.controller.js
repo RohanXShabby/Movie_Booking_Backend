@@ -45,7 +45,7 @@ export const registerController = async (request, response, next) => {
         .replace("userName", name)
         .replace(
             "VerifyUrl",
-            `http://localhost:3000/api/verify/${userDetail._id}/${token}`,
+            `https://movie-booking-backend-erbf.onrender.com/api/verify/${userDetail._id}/${token}`,
         );
 
     emailSender(email, subject, content);
@@ -66,7 +66,7 @@ export const verifyEmailController = async (request, response) => {
     user.emailToken = undefined;
     await user.save();
 
-    response.status(200).redirect("http://localhost:5173/verifiedstatus");
+    response.status(200).redirect("https://movie-booking-frontend-two.vercel.app/verifiedstatus");
 };
 
 export const userLoginController = async (request, response) => {

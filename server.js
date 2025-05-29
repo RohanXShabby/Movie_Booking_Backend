@@ -21,7 +21,7 @@ server.use(cookieParser())
 
 //cors Policy
 server.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://movie-booking-frontend-two.vercel.app/',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -32,7 +32,7 @@ server.use(express.json());
     try {
         await DBconnect()
         server.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
+            console.log(`Server is running on ${PORT}`);
         });
     } catch (error) {
         console.error('Database Connection Error', error.message)
