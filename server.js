@@ -39,6 +39,9 @@ server.use(express.json());
     }
 })()
 
+server.get('/', (req, res) => {
+    res.send("server Running")
+})
 
 server.use('/api', router)
 server.use('/api', adminRouter)
