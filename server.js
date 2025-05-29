@@ -20,12 +20,23 @@ const PORT = process.env.PORT || 3001;
 server.use(cookieParser())
 
 //cors Policy
+const allowedOrigin = 'https://movie-booking-frontend-f0sgukzv8-rohan-bishts-projects-d8d867dd.vercel.app';
+
 server.use(cors({
-    origin: '*',
+    origin: allowedOrigin, // MUST be a string when credentials: true
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
-}))
+}));
+
+server.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin); // Match the origin exactly
+    res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+    res.setHeader("Access-Control-Expose-Headers", "Authorization");
+    res.setHeader("Access-Control-Allow-Credentials", "true"); // required for credentials
+    next();
+});
+
 server.use(express.json());
 
 // https://movie-booking-frontend-two.vercel.app
@@ -45,12 +56,12 @@ server.get('/', (req, res) => {
     res.send("server Running")
 })
 
-server.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from this origin
-    res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type"); // Allow these headers in requests
-    res.setHeader("Access-Control-Expose-Headers", "Authorization"); // Expose these headers in responses
-    next(); // Pass control to the next middleware
-});
+// server.use((req, res, next) => {
+//     res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from this origin
+//     res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type"); // Allow these headers in requests
+//     res.setHeader("Access-Control-Expose-Headers", "Authorization"); // Expose these headers in responses
+//     next(); // Pass control to the next middleware
+// });
 
 server.use('/api', router)
 server.use('/api', adminRouter)
