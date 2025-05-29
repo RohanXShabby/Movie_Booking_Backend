@@ -45,12 +45,21 @@ server.get('/', (req, res) => {
     res.send("server Running")
 })
 
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from this origin
+    res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type"); // Allow these headers in requests
+    res.setHeader("Access-Control-Expose-Headers", "Authorization"); // Expose these headers in responses
+    next(); // Pass control to the next middleware
+});
+
 server.use('/api', router)
 server.use('/api', adminRouter)
 server.use('/api', screenRoutes)
 server.use('/api', bookingRoutes)
 server.use('/api', showRoutes)
 server.use('/api', theaterRoutes)
+
+
 
 server.use((error, request, response, next) => {
     response
