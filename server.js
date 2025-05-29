@@ -45,7 +45,7 @@ server.get('/', (req, res) => {
     res.send("server Running")
 })
 
-app.use((req, res, next) => {
+server.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from this origin
     res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type"); // Allow these headers in requests
     res.setHeader("Access-Control-Expose-Headers", "Authorization"); // Expose these headers in responses
