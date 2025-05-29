@@ -21,12 +21,14 @@ server.use(cookieParser())
 
 //cors Policy
 server.use(cors({
-    origin: 'https://movie-booking-frontend-two.vercel.app/',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }))
 server.use(express.json());
+
+// https://movie-booking-frontend-two.vercel.app
 
 (async () => {
     try {
