@@ -45,7 +45,7 @@ export const registerController = async (request, response, next) => {
         .replace("userName", name)
         .replace(
             "VerifyUrl",
-            `https://movie-booking-backend-erbf.onrender.com/api/verify/${userDetail._id}/${token}`,
+            `${process.env.FRONTEND_URL}/api/verify/${userDetail._id}/${token}`,
         );
 
     emailSender(email, subject, content);
