@@ -40,7 +40,7 @@ server.use(cors({
 
 
 server.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigins);
     res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
     res.setHeader("Access-Control-Expose-Headers", "Authorization");
     res.setHeader("Access-Control-Allow-Credentials", "true"); // required for credentials
