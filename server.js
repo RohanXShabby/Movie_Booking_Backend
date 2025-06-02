@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 3001;
 server.use(cookieParser())
 
 //cors Policy
-const allowedOrigin = 'https://movie-booking-frontend-f0sgukzv8-rohan-bishts-projects-d8d867dd.vercel.app';
+const allowedOrigin = 'https://movie-booking-frontend-two.vercel.app';
 
 server.use(cors({
     origin: allowedOrigin,
