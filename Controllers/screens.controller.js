@@ -15,3 +15,19 @@ export const getAllScreenController = async (request, response, next) => {
     response.status(200).json({ success: true, screens });
 };
 
+export const getScreenByIdController = async (request, response, next) => {
+    const { id } = request.params;
+
+    if (!id) {
+        throw new customError('Screen ID is required', 400);
+    }
+
+    const screen = await screensModel.findById(id).populate('showId');
+
+    if (!screen) {
+        throw new customError('Screen not found', 404);
+    }
+
+    response.status(200).json({ success: true, screen });
+};
+
