@@ -20,17 +20,27 @@ const PORT = process.env.PORT || 3001;
 server.use(cookieParser())
 
 //cors Policy
-const allowedOrigin = 'https://movie-booking-frontend-two.vercel.app';
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://movie-booking-frontend-two.vercel.app'
+];
 
 server.use(cors({
-    origin: allowedOrigin,
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+
 server.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", allowedOrigin); // Match the origin exactly
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
     res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
     res.setHeader("Access-Control-Expose-Headers", "Authorization");
     res.setHeader("Access-Control-Allow-Credentials", "true"); // required for credentials
