@@ -1,6 +1,5 @@
 import { movieModel } from '../Models/movie.model.js'
-import mongoose from "mongoose"
-const User = mongoose.model('User');
+import { User } from '../Models/user.model.js'
 
 export const addMovieController = async (request, response, next) => {
     const movieDetails = request.body;
