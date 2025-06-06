@@ -8,6 +8,7 @@ import { optTemplate } from "../Templates/otpTemplates.js";
 import env from "dotenv";
 import jwt from 'jsonwebtoken'
 import { movieModel } from '../Models/movie.model.js'
+import { bookingModel } from '../Models/booking.model.js'
 
 env.config();
 
@@ -177,3 +178,37 @@ export const getSingleMovieController = async (request, response) => {
     response.status(200).json({ message: "success", data: movieDetails })
 
 }
+
+export const getUserBookings = async (request, response, next) => {
+    const userId = request.user._id;
+
+    const bookings = await bookingModel.find({ userId })
+        .populate({
+            path: 'showId',
+            populate: [
+                { path: 'movieId', select: 'title' },
+                { path: 'screenId', select: 'name' },
+                { path: 'theaterId', select: 'name' }
+            ]
+        })
+        .sort({ createdAt: -1 }); // Most recent bookings first
+
+    const formattedBookings = bookings.map(booking => ({
+        id: booking._id,
+        movieName: booking.showId.movieId.title,
+        theaterName: booking.showId.theaterId.name,
+        screenName: booking.showId.screenId.name,
+        date: booking.showId.date,
+        time: booking.showId.time,
+        seats: booking.seats,
+        total: booking.totalAmount,
+        isConfirmed: booking.isConfirmed,
+        createdAt: booking.createdAt
+    }));
+
+    response.status(200).json({
+        success: true,
+        bookings: formattedBookings,
+        totalBookings: bookings.length
+    });
+};

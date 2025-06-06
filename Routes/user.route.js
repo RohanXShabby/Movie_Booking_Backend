@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { initialController, registerController, verifyEmailController, userLoginController, otpController, passwordResetController, verifyOtpController, getAllMovieController, getSingleMovieController } from "../Controllers/user.controller.js";
+import { initialController, registerController, verifyEmailController, userLoginController, otpController, passwordResetController, verifyOtpController, getAllMovieController, getSingleMovieController, getUserBookings } from "../Controllers/user.controller.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import { authCheck } from "../Middleware/auth.middleware.js";
 
@@ -27,3 +27,5 @@ router.post('/userlogin', asyncHandler(userLoginController))
 router.get('/get-movies', asyncHandler(getAllMovieController))
 
 router.get('/movies/:id', asyncHandler(getSingleMovieController))
+
+router.get('/user/bookings', authCheck, asyncHandler(getUserBookings))
