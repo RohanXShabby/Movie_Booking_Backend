@@ -1,27 +1,27 @@
 import { movieModel } from '../Models/movie.model.js'
 
 export const addMovieController = async (request, response, next) => {
-        const movieDetails = request.body;
+    const movieDetails = request.body;
 
-        const requiredFields = [
-            "title", "genre", "language", "duration", "releaseDate",
-            "rating", "cast", "director", "posterUrl", "trailerUrl", "description"
-        ];
-        const missingFields = requiredFields.filter(field => !movieDetails[field]);
-        if (missingFields.length > 0) {
-            return response.status(400).json({
-                success: false,
-                message: `Missing required fields: ${missingFields.join(", ")}`
-            });
-        } 
-        const newMovie = new movieModel(movieDetails);
-        await newMovie.save();
-        response.status(201).json({
-            success: true,
-            message: 'Movie Added Successfully',
-            movie: newMovie
+    const requiredFields = [
+        "title", "genre", "language", "duration", "releaseDate",
+        "rating", "cast", "director", "posterUrl", "trailerUrl", "description"
+    ];
+    const missingFields = requiredFields.filter(field => !movieDetails[field]);
+    if (missingFields.length > 0) {
+        return response.status(400).json({
+            success: false,
+            message: `Missing required fields: ${missingFields.join(", ")}`
         });
     }
+    const newMovie = new movieModel(movieDetails);
+    await newMovie.save();
+    response.status(201).json({
+        success: true,
+        message: 'Movie Added Successfully',
+        movie: newMovie
+    });
+}
 
 export const addPosterController = async (request, response, next) => {
     try {
@@ -40,4 +40,37 @@ export const addPosterController = async (request, response, next) => {
         console.error("Upload error:", error);
         next(error);
     }
+};
+
+export const deleteMovieController = async (request, response, next) => {
+    const { id } = request.params;
+    const movie = await movieModel.findByIdAndDelete(id);
+    if (!movie) {
+        return response.status(404).json({
+            success: false,
+            message: 'Movie not found'
+        });
+    }
+    response.status(200).json({
+        success: true,
+        message: 'Movie deleted successfully'
+    });
+};
+
+export const updateMovieController = async (request, response, next) => {
+    const { id } = request.params;
+    const updates = request.body;
+
+    const movie = await movieModel.findByIdAndUpdate(id, updates, { new: true });
+    if (!movie) {
+        return response.status(404).json({
+            success: false,
+            message: 'Movie not found'
+        });
+    }
+    response.status(200).json({
+        success: true,
+        message: 'Movie updated successfully',
+        movie
+    });
 };
