@@ -74,3 +74,11 @@ export const updateMovieController = async (request, response, next) => {
         movie
     });
 };
+
+export const getAllMoviesController = async (request, response, next) => {
+    const movies = await movieModel.find({}).sort({ createdAt: -1 });
+    response.status(200).json({
+        success: true,
+        movies
+    });
+};
