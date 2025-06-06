@@ -1,5 +1,6 @@
 import { movieModel } from '../Models/movie.model.js'
-import { userModel } from '../Models/user.model.js'
+import mongoose from "mongoose"
+const User = mongoose.model('User');
 
 export const addMovieController = async (request, response, next) => {
     const movieDetails = request.body;
@@ -85,7 +86,7 @@ export const getAllMoviesController = async (request, response, next) => {
 };
 
 export const getAllUsersController = async (request, response) => {
-    const users = await userModel.find({}, { password: 0 }).sort({ createdAt: -1 });
+    const users = await User.find({}, { password: 0 }).sort({ createdAt: -1 });
     response.status(200).json({
         success: true,
         users
@@ -96,7 +97,7 @@ export const updateUserStatusController = async (request, response) => {
     const { id } = request.params;
     const { status } = request.body;
 
-    const user = await userModel.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         id,
         { status },
         { new: true, select: '-password' }
@@ -119,7 +120,7 @@ export const updateUserStatusController = async (request, response) => {
 export const deleteUserController = async (request, response) => {
     const { id } = request.params;
 
-    const user = await userModel.findByIdAndDelete(id);
+    const user = await User.findByIdAndDelete(id);
     if (!user) {
         return response.status(404).json({
             success: false,

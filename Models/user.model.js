@@ -30,6 +30,11 @@ const userSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
+    },
+    status: {
+        type: String,
+        enum: ['active', 'blocked', 'pending'],
+        default: 'pending'
     }
 }, { timestamps: true });
 
