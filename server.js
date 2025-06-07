@@ -38,16 +38,6 @@ server.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-
-
-// server.use((req, res, next) => {
-//     res.setHeader("Access-Control-Allow-Origin", allowedOrigins);
-//     res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
-//     res.setHeader("Access-Control-Expose-Headers", "Authorization");
-//     res.setHeader("Access-Control-Allow-Credentials", "true"); // required for credentials
-//     next();
-// });
-
 server.use(express.json());
 
 

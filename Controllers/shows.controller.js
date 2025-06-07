@@ -2,10 +2,20 @@ import { showModel } from '../Models/shows.model.js';
 import customError from '../Utils/errorHandler.js';
 
 export const addShowController = async (request, response, next) => {
-    const { movieId, screenId, theaterId, date, time, format, seatPrice } = request.body;
-
-    if (!movieId || !screenId || !theaterId || !date || !time || !seatPrice) {
+    const { movieId, screenId, theaterId, date, time, format, seatPrice } = request.body; if (!movieId || !screenId || !theaterId || !date || !time || !seatPrice) {
         throw new customError('All fields are required', 400);
+    }
+
+    // Check for overlapping shows on the same screen
+    const existingShow = await showModel.findOne({
+        screenId,
+        date,
+        time,
+        _id: { $ne: request.params.id } // Exclude current show when updating
+    });
+
+    if (existingShow) {
+        throw new customError('There is already a show scheduled at this time for this screen', 400);
     }
 
     const newShow = await showModel.create({
@@ -64,6 +74,20 @@ export const getShowByIdController = async (request, response, next) => {
 export const updateShowController = async (request, response, next) => {
     const { id } = request.params;
     const updates = request.body;
+
+    // Check for overlapping shows if time/date/screen is being updated
+    if (updates.date || updates.time || updates.screenId) {
+        const existingShow = await showModel.findOne({
+            screenId: updates.screenId || updates.screenId,
+            date: updates.date || updates.date,
+            time: updates.time || updates.time,
+            _id: { $ne: id }
+        });
+
+        if (existingShow) {
+            throw new customError('There is already a show scheduled at this time for this screen', 400);
+        }
+    }
 
     const show = await showModel.findByIdAndUpdate(id, updates, { new: true })
         .populate("movieId", "title genre duration language")
