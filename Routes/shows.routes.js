@@ -5,6 +5,10 @@ import { addShowController, getShowController } from '../Controllers/shows.contr
 export const showRoutes = Router()
 
 
-showRoutes.post('/add-show', asyncHandler(addShowController))
-
-showRoutes.get('/get-show', asyncHandler(getShowController))
+showRoutes.post('/shows', asyncHandler(addShowController))
+showRoutes.get('/shows', asyncHandler(getShowController))
+showRoutes.put('/shows/:id', asyncHandler(updateShowController))
+showRoutes.delete('/shows/:id', asyncHandler(deleteShowController))
+showRoutes.get('/shows/:id', asyncHandler(getShowByIdController))
+showRoutes.get('/shows/theater/:theaterId', asyncHandler(getShowsByTheaterController))
+showRoutes.get('/shows/movie/:movieId', asyncHandler(getShowsByMovieController))

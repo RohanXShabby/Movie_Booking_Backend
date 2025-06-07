@@ -28,9 +28,99 @@ export const addShowController = async (request, response, next) => {
         message: 'Show added successfully',
         show: populatedShow
     });
-
 };
 
-export const getShowController = async (req, res, next) => {
-  
+export const getShowController = async (request, response, next) => {
+    const shows = await showModel.find()
+        .populate("movieId", "title genre duration language")
+        .populate("theaterId", "name city address")
+        .populate("screenId", "name totalSeats")
+        .sort({ date: 1, time: 1 });
+
+    response.status(200).json({
+        success: true,
+        shows
+    });
+};
+
+export const getShowByIdController = async (request, response, next) => {
+    const { id } = request.params;
+
+    const show = await showModel.findById(id)
+        .populate("movieId", "title genre duration language")
+        .populate("theaterId", "name city address")
+        .populate("screenId", "name totalSeats");
+
+    if (!show) {
+        throw new customError('Show not found', 404);
+    }
+
+    response.status(200).json({
+        success: true,
+        show
+    });
+};
+
+export const updateShowController = async (request, response, next) => {
+    const { id } = request.params;
+    const updates = request.body;
+
+    const show = await showModel.findByIdAndUpdate(id, updates, { new: true })
+        .populate("movieId", "title genre duration language")
+        .populate("theaterId", "name city address")
+        .populate("screenId", "name totalSeats");
+
+    if (!show) {
+        throw new customError('Show not found', 404);
+    }
+
+    response.status(200).json({
+        success: true,
+        message: 'Show updated successfully',
+        show
+    });
+};
+
+export const deleteShowController = async (request, response, next) => {
+    const { id } = request.params;
+
+    const show = await showModel.findByIdAndDelete(id);
+    if (!show) {
+        throw new customError('Show not found', 404);
+    }
+
+    response.status(200).json({
+        success: true,
+        message: 'Show deleted successfully'
+    });
+};
+
+export const getShowsByTheaterController = async (request, response, next) => {
+    const { theaterId } = request.params;
+
+    const shows = await showModel.find({ theaterId })
+        .populate("movieId", "title genre duration language")
+        .populate("theaterId", "name city address")
+        .populate("screenId", "name totalSeats")
+        .sort({ date: 1, time: 1 });
+
+    response.status(200).json({
+        success: true,
+        shows
+    });
+};
+
+export const getShowsByMovieController = async (request, response, next) => {
+    const { movieId } = request.params;
+
+    const shows = await showModel.find({ movieId })
+        .populate("movieId", "title genre duration language")
+        .populate("theaterId", "name city address")
+        .populate("screenId", "name totalSeats")
+        .sort({ date: 1, time: 1 });
+
+    response.status(200).json({
+        success: true,
+        shows
+    });
 };
