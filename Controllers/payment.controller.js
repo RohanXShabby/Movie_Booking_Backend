@@ -7,14 +7,14 @@ import customError from '../Utils/errorHandler.js';
 let razorpay = null;
 
 const initializeRazorpay = () => {
-    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_SECRET_KEY) {
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_SECRET) {
         throw new customError('Razorpay credentials are not configured', 500);
     }
 
     if (!razorpay) {
         razorpay = new Razorpay({
             key_id: process.env.RAZORPAY_KEY_ID,
-            key_secret: process.env.RAZORPAY_SECRET_KEY
+            key_secret: process.env.RAZORPAY_SECRET
         });
     }
     return razorpay;
@@ -27,7 +27,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
         // For testing purposes, always use 1 rupee
         const options = {
-            amount: 100, // amount in smallest currency unit (paise)
+            amount: amount * 100, // amount in smallest currency unit (paise)
             currency: "INR",
             receipt: `receipt_${Date.now()}`,
         };
