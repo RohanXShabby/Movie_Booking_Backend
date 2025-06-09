@@ -7,14 +7,14 @@ import customError from '../Utils/errorHandler.js';
 let razorpay = null;
 
 const initializeRazorpay = () => {
-    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_SECRET) {
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_SECRET_KEY) {
         throw new customError('Razorpay credentials are not configured', 500);
     }
 
     if (!razorpay) {
         razorpay = new Razorpay({
             key_id: process.env.RAZORPAY_KEY_ID,
-            key_secret: process.env.RAZORPAY_SECRET
+            key_secret: process.env.RAZORPAY_SECRET_KEY
         });
     }
     return razorpay;
@@ -45,10 +45,21 @@ const createOrder = asyncHandler(async (req, res) => {
 
 const verifyPayment = asyncHandler(async (req, res) => {
     try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        const {
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature,
+            seats,
+            screenId,
+            amount
+        } = req.body;
 
         if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
             throw new customError('Missing payment verification parameters', 400);
+        }
+
+        if (!seats || !screenId || !amount) {
+            throw new customError('Missing booking details', 400);
         }
 
         // Verify the payment signature
@@ -58,9 +69,17 @@ const verifyPayment = asyncHandler(async (req, res) => {
             .digest("hex");
 
         if (razorpay_signature === expectedSign) {
+            // Store payment details in the response for booking creation
             res.json({
                 success: true,
-                message: "Payment verified successfully"
+                message: "Payment verified successfully",
+                paymentDetails: {
+                    orderId: razorpay_order_id,
+                    paymentId: razorpay_payment_id,
+                    amount,
+                    seats,
+                    screenId
+                }
             });
         } else {
             throw new customError('Invalid payment signature', 400);
