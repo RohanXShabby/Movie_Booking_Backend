@@ -4,31 +4,33 @@ import customError from '../Utils/errorHandler.js';
 
 
 export const addBookingController = async (request, response, next) => {
-    const { userId, showId, seats, totalAmount, isConfirmed } = request.body;
+    const { userId, showId, seats, totalAmount, paymentId } = request.body;
 
-    if (!userId || !showId || !seats || !totalAmount) {
+    if (!userId || !showId || !seats || !totalAmount || !paymentId) {
         throw new customError('All fields are required', 400);
     }
+
     const newBooking = await bookingModel.create({
         userId,
         showId,
         seats,
         totalAmount,
-        isConfirmed
+        paymentId,
+        isConfirmed: true // Payment is confirmed since we have a paymentId
     });
+
     const populatedBooking = await bookingModel.findById(newBooking._id)
         .populate("userId", "name email")
         .populate({
             path: "showId",
-            populate: [
-                { path: "movieId", select: "title genre duration" },
-                { path: "theaterId", select: "name city address" },
-                { path: "screenId", select: "name totalSeats" }
-            ]
+            populate: {
+                path: "movieId",
+                select: "title"
+            }
         });
+
     response.status(201).json({
         success: true,
-        message: 'Booking added successfully',
         booking: populatedBooking
     });
 };

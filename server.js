@@ -5,6 +5,7 @@ import { screenRoutes } from './Routes/screens.routes.js'
 import { bookingRoutes } from './Routes/booking.routes.js'
 import { showRoutes } from './Routes/shows.routes.js'
 import { theaterRoutes } from './Routes/theater.routes.js'
+import { paymentRoutes } from './Routes/payment.routes.js'
 import env from 'dotenv';
 import cors from 'cors'
 import DBconnect from './Database/DBconnect.js';
@@ -63,6 +64,7 @@ server.use('/api', screenRoutes)
 server.use('/api', bookingRoutes)
 server.use('/api', showRoutes)
 server.use('/api', theaterRoutes)
+server.use('/api', paymentRoutes)
 
 
 
