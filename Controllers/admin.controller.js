@@ -94,11 +94,16 @@ export const getAllUsersController = async (request, response) => {
 
 export const updateUserStatusController = async (request, response) => {
     const { id } = request.params;
-    const { status } = request.body;
+    const { status, isAdmin } = request.body;
+
+    const updateFields = {
+        status,
+        ...(isAdmin !== undefined && { isAdmin })
+    };
 
     const user = await User.findByIdAndUpdate(
         id,
-        { status },
+        updateFields,
         { new: true, select: '-password' }
     );
 
