@@ -58,14 +58,14 @@ server.get('/', (req, res) => {
 })
 
 
-server.use('/api', router)
-server.use('/api', adminRouter)
-server.use('/api', screenRoutes)
-server.use('/api', bookingRoutes)
-server.use('/api', showRoutes)
-server.use('/api', theaterRoutes)
-server.use('/api', paymentRoutes)
-
+// Routes
+server.use('/api', router);
+server.use('/api', adminRouter);
+server.use('/api', screenRoutes);
+server.use('/api', bookingRoutes);
+server.use('/api', showRoutes);
+server.use('/api', theaterRoutes);
+server.use('/api', paymentRoutes);
 
 
 server.use((error, request, response, next) => {

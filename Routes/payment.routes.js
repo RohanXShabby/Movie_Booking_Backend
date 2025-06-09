@@ -4,5 +4,5 @@ import { authCheck } from '../Middleware/auth.middleware.js';
 
 export const paymentRoutes = Router();
 
-paymentRoutes.post('/create-order', authCheck, createOrder);
-paymentRoutes.post('/verify', authCheck, verifyPayment);
+paymentRoutes.post('/payment/create-order', authCheck, createOrder);
+paymentRoutes.post('/payment/verify', authCheck, verifyPayment);
