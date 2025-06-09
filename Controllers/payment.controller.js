@@ -1,6 +1,6 @@
 import Razorpay from 'razorpay';
 import { asyncHandler } from '../Utils/asyncHandler.js';
-import crypto from 'crypto';
+import { createHmac } from 'crypto';
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
@@ -34,10 +34,8 @@ const createOrder = asyncHandler(async (req, res) => {
 const verifyPayment = asyncHandler(async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-    // Verify the payment signature
-    const sign = razorpay_order_id + "|" + razorpay_payment_id;
-    const expectedSign = crypto
-        .createHmac("sha256", process.env.RAZORPAY_SECRET_KEY)
+    // Verify the payment signature    const sign = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSign = createHmac("sha256", process.env.RAZORPAY_SECRET_KEY)
         .update(sign.toString())
         .digest("hex");
 
