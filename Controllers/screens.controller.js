@@ -12,13 +12,18 @@ export const addScreenController = async (request, response, next) => {
     const theater = await theaterModel.findById(theaterId);
     if (!theater) {
         throw new customError('Theater not found', 404);
-    }    // Create the screen
+    }    // Create the screen    // Ensure each seat in the layout has its type and verify seatPricing exists
+    const { seatPricing } = request.body;
+    if (!seatPricing || !seatPricing.normal || !seatPricing.premium || !seatPricing.recliner) {
+        throw new customError('Seat pricing information is required for all seat types', 400);
+    }
+
     const newScreen = await screensModel.create({
         name,
         totalSeats,
         layout,
         theaterId,
-        seatPricing: request.body.seatPricing // Add seat pricing
+        seatPricing
     });
 
     // Add screen to theater's screens array
