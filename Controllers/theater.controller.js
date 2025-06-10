@@ -25,20 +25,45 @@ export const getAllTheatersController = async (request, response) => {
     });
 };
 
-export const updateTheaterController = async (request, response) => {
-    const { id } = request.params;
-    const updates = request.body;
+export const updateTheaterController = async (request, response, next) => {
+    try {
+        const { id } = request.params;
+        const { name, city, address } = request.body;
 
-    const theater = await theaterModel.findByIdAndUpdate(id, updates, { new: true });
-    if (!theater) {
-        throw new customError('Theater not found', 404);
+        // Validate input
+        const errors = {};
+        if (!name || !name.trim()) errors.name = 'Theater name is required';
+        if (!city || !city.trim()) errors.city = 'City is required';
+        if (!address || !address.trim()) errors.address = 'Address is required';
+
+        if (Object.keys(errors).length > 0) {
+            throw new customError('Validation failed', 400, errors);
+        }
+
+        const theater = await theaterModel.findById(id);
+        if (!theater) {
+            throw new customError('Theater not found', 404);
+        }
+
+        // Update and trim values
+        theater.name = name.trim();
+        theater.city = city.trim();
+        theater.address = address.trim();
+
+        await theater.save();
+
+        response.status(200).json({
+            success: true,
+            message: 'Theater updated successfully',
+            theater
+        });
+    } catch (error) {
+        if (error.name === 'CastError' && error.kind === 'ObjectId') {
+            next(new customError('Invalid theater ID', 400));
+        } else {
+            next(error);
+        }
     }
-
-    response.status(200).json({
-        success: true,
-        message: 'Theater updated successfully',
-        theater
-    });
 };
 
 export const deleteTheaterController = async (request, response) => {
