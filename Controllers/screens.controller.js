@@ -3,17 +3,33 @@ import { theaterModel } from '../Models/theater.model.js';
 import customError from '../Utils/errorHandler.js';
 
 export const addScreenController = async (request, response, next) => {
-    const { theaterId } = request.params;
-    const { name, totalSeats, layout } = request.body;
+    const { theaterId } = request.params; const { name, totalSeats, layout, seatPricing } = request.body;
 
-    if (!name || !totalSeats || !layout || !theaterId) {
+    if (!name || !totalSeats || !layout || !theaterId || !seatPricing) {
         throw new customError('All fields are required', 400);
     }
+
+    // Validate seatPricing structure
+    if (!seatPricing.normal || !seatPricing.premium || !seatPricing.recliner ||
+        typeof seatPricing.normal !== 'number' ||
+        typeof seatPricing.premium !== 'number' ||
+        typeof seatPricing.recliner !== 'number') {
+        throw new customError('Valid pricing for all seat types (normal, premium, recliner) is required', 400);
+    }
+
+    // Validate that all seats in layout have valid types
+    for (const row of layout) {
+        for (const seat of row) {
+            if (!seat.seatType || !['normal', 'premium', 'recliner'].includes(seat.seatType)) {
+                throw new customError('Invalid seat type found in layout', 400);
+            }
+        }
+    }
+
     const theater = await theaterModel.findById(theaterId);
     if (!theater) {
         throw new customError('Theater not found', 404);
-    }    // Create the screen    // Ensure each seat in the layout has its type and verify seatPricing exists
-    const { seatPricing } = request.body;
+    }
     if (!seatPricing || !seatPricing.normal || !seatPricing.premium || !seatPricing.recliner) {
         throw new customError('Seat pricing information is required for all seat types', 400);
     }

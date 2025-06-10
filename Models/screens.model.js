@@ -26,11 +26,10 @@ const screensSchema = new mongoose.Schema({
             available: { type: Boolean, default: true }
         }]],
         required: true
-    },
-    seatPricing: {
-        normal: { type: Number, required: true, default: 150 },
-        premium: { type: Number, required: true, default: 200 },
-        recliner: { type: Number, required: true, default: 300 }
+    }, seatPricing: {
+        normal: { type: Number, required: true, min: 0, default: 150 },
+        premium: { type: Number, required: true, min: 0, default: 200 },
+        recliner: { type: Number, required: true, min: 0, default: 300 }
     }
 }, { timestamps: true });
 
