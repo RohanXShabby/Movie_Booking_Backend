@@ -5,10 +5,10 @@ import { addScreenController, getAllScreenController, getScreenByIdController } 
 export const screenRoutes = Router()
 
 // Create new screen
-screenRoutes.post('/add-screen', asyncHandler(addScreenController))
+screenRoutes.post('/theaters/:theaterId/screens', asyncHandler(addScreenController))
 
 // Get all screens
-screenRoutes.get('/screens', asyncHandler(getAllScreenController))
+screenRoutes.get('/theaters/:theaterId/screens', asyncHandler(getAllScreenController))
 
 // Get single screen by ID
-screenRoutes.get('/screens/:id', asyncHandler(getScreenByIdController))
+screenRoutes.get('/theaters/:theaterId/screens/:id', asyncHandler(getScreenByIdController))

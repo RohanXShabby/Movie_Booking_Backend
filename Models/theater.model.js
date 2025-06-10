@@ -14,12 +14,10 @@ const theaterSchema = new mongoose.Schema({
     address: {
         type: String,
         required: true
-    },
-    screens: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "screens",
-        required: true
-    }
+    }, screens: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "screens"
+    }]
 }, { timestamps: true });
 
 export const theaterModel = mongoose.model('theaters', theaterSchema);

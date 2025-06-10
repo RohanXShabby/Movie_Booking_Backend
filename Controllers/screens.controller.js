@@ -1,13 +1,36 @@
 import { screensModel } from '../Models/screens.model.js';
+import { theaterModel } from '../Models/theater.model.js';
 import customError from '../Utils/errorHandler.js';
 
 export const addScreenController = async (request, response, next) => {
+    const { theaterId } = request.params;
     const { name, totalSeats, layout } = request.body;
-    if (!name || !totalSeats || !layout) {
+
+    if (!name || !totalSeats || !layout || !theaterId) {
         throw new customError('All fields are required', 400);
     }
-    const newScreen = await screensModel.create({ name, totalSeats, layout });
-    response.status(201).json({ success: true, message: 'Screen added successfully', screen: newScreen });
+    const theater = await theaterModel.findById(theaterId);
+    if (!theater) {
+        throw new customError('Theater not found', 404);
+    }
+
+    // Create the screen
+    const newScreen = await screensModel.create({
+        name,
+        totalSeats,
+        layout,
+        theaterId // Add reference to theater
+    });
+
+    // Add screen to theater's screens array
+    theater.screens.push(newScreen._id);
+    await theater.save();
+
+    response.status(201).json({
+        success: true,
+        message: 'Screen added successfully',
+        screen: newScreen
+    });
 };
 
 export const getAllScreenController = async (request, response, next) => {

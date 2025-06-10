@@ -10,6 +10,11 @@ const screensSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    theaterId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'theaters',
+        required: true
+    },
     layout: {
         type: [[{
             seatNumber: String,
