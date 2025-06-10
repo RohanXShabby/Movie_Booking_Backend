@@ -12,14 +12,13 @@ export const addScreenController = async (request, response, next) => {
     const theater = await theaterModel.findById(theaterId);
     if (!theater) {
         throw new customError('Theater not found', 404);
-    }
-
-    // Create the screen
+    }    // Create the screen
     const newScreen = await screensModel.create({
         name,
         totalSeats,
         layout,
-        theaterId // Add reference to theater
+        theaterId,
+        seatPricing: request.body.seatPricing // Add seat pricing
     });
 
     // Add screen to theater's screens array
