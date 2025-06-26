@@ -67,7 +67,7 @@ export const verifyEmailController = async (request, response) => {
     user.emailToken = undefined;
     await user.save();
 
-    response.status(200).redirect("https://movie-booking-frontend-two.vercel.app/verifiedstatus");
+    response.status(200).redirect(`${process.env.FRONTEND_URL}/verifiedstatus`);
 };
 
 export const userLoginController = async (request, response) => {
