@@ -23,6 +23,7 @@ server.use(cookieParser())
 //cors Policy
 const allowedOrigins = [
     'http://localhost:5173',
+    'https://movie-booking-frontend-two.vercel.app',
     'https://movie-booking-frontend-two.vercel.app'
 ];
 
